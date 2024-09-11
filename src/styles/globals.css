@@ -1,0 +1,33 @@
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;500;600&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*,
+*:after,
+*:before {
+  box-sizing: inherit;
+}
+
+body {
+  box-sizing: border-box;
+}
+
+.cursive {
+  font-family: "Pacifico", cursive;
+}
+
+@layer base {
+  html {
+    box-sizing: border-box;
+    font-family: "Nunito Sans", sans-serif;
+  }
+  ol {
+    list-style: circle;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+}
