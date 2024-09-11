@@ -1,6 +1,6 @@
 import { BookDisplayModel, mapBookToDisplayModel } from "./util";
 
-const API_BASE = process.env.BASE_ENDPOINT;
+const API_BASE = process.env.NEXT_PUBLIC_BASE_ENDPOINT;
 
 export const fetchShelves = async () => {
 	try {
