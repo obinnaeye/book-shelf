@@ -1,25 +1,18 @@
 import { useEffect, useState } from "react";
 import { fetchBooksInShelf } from "@/services/api";
 import Image from "next/image";
-
-interface Book {
-	id: string;
-	title: string;
-	author?: string;
-	cover?: string;
-	price?: string;
-}
+import { BookDisplayModel } from "@/services/util";
 
 interface BooksProps {
 	shelfId: string;
 }
 
 const Books: React.FC<BooksProps> = ({ shelfId }) => {
-	const [books, setBooks] = useState<Book[]>([]);
+	const [books, setBooks] = useState<BookDisplayModel[]>([]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [loading, setLoading] = useState(false);
 
-	const limit = 20;
+	const limit = 21;
 	const offset = (currentPage - 1) * limit;
 
 	useEffect(() => {
@@ -55,34 +48,38 @@ const Books: React.FC<BooksProps> = ({ shelfId }) => {
 				<p>Loading books...</p>
 			) : (
 				<div>
-					<div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+					<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 						{books.map((book) => (
 							<div
 								key={book.id}
-								className="bg-gray-100 p-4 rounded-lg shadow"
+								className="bg-gray-100 p-2 rounded-lg shadow"
 							>
 								{book.cover && (
-									<Image
-										src={book.cover}
-										alt={book.title}
-										width={150}
-										height={200}
-										className="mb-2 rounded"
-									/>
+									<div className="relative w-full aspect-[2/3]">
+										<Image
+											src={book.cover}
+											alt={book.title}
+											layout="fill"
+											objectFit="cover"
+											className="rounded"
+										/>
+									</div>
 								)}
-								<h3 className="text-lg font-medium">
-									{book.title}
-								</h3>
-								{book.author && (
-									<p className="text-gray-700">
-										{book.author}
-									</p>
-								)}
-								{book.price && (
-									<p className="text-green-600">
-										{book.price}
-									</p>
-								)}
+								<div className="mt-2">
+									<h3 className="text-lg font-medium">
+										{book.title}
+									</h3>
+									{book.authors && (
+										<p className="text-gray-700">
+											{book.authors}
+										</p>
+									)}
+									{book.price && (
+										<p className="text-green-600">
+											{book.price}
+										</p>
+									)}
+								</div>
 							</div>
 						))}
 					</div>

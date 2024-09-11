@@ -1,13 +1,15 @@
-export type BookDisplayModel = {
-	authors: string[];
+export interface BookDisplayModel {
+	authors: string;
 	price: string;
 	cover: string;
 	title: string;
 	id: string;
-};
+}
 
 const extractAuthors = (authors: any[]): string => {
 	if (!authors) return "";
+
+	if (typeof authors == "string") return authors;
 
 	if ((authors.length = 1)) return authors[0]?.name ?? "";
 

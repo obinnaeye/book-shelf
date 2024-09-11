@@ -1,4 +1,6 @@
-const API_BASE = "https://api.glose.com";
+import { BookDisplayModel, mapBookToDisplayModel } from "./util";
+
+const API_BASE = process.env.BASE_ENDPOINT;
 
 export const fetchShelves = async () => {
 	try {
@@ -60,11 +62,11 @@ export const fetchBooksInShelf = async (
 		const books = [];
 		for (const bookId of bookIds) {
 			const book = await fetchBookById(bookId);
-			if (book) {
+			if (book.hasOwnProperty("id")) {
 				books.push(book);
 			}
 		}
-		return books;
+		return books.map(mapBookToDisplayModel) as BookDisplayModel[];
 	} catch (error) {
 		console.error("Error fetching books:", error);
 		return [];

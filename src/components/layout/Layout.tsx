@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/router";
 import { fetchShelves } from "@/services/api";
-import { MenuIcon, XIcon } from "lucide-react";
+import ShelfCard from "../ui/ShelfCard";
+import { Menu, X } from "lucide-react";
 
 interface LayoutProps {
 	children: React.ReactNode;
@@ -14,7 +15,8 @@ interface Shelf {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
 	const [shelves, setShelves] = useState<Shelf[]>([]);
-	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+	const router = useRouter();
 
 	useEffect(() => {
 		const getShelves = async () => {
@@ -25,11 +27,20 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 		getShelves();
 	}, []);
 
+	const handleShelfClick = (shelfId: string) => {
+		setIsSidebarOpen(false); // Close sidebar on mobile after clicking
+		router.push(`/shelves/${shelfId}`);
+	};
+
+	const toggleSidebar = () => {
+		setIsSidebarOpen(!isSidebarOpen);
+	};
+
 	return (
 		<div className="flex flex-col min-h-screen">
 			{/* Header */}
 			<header className="bg-indigo-600 text-white p-4 flex justify-between items-center shadow-md sticky top-0 z-50">
-				<div className="flex items-center space-x-2">
+				<div className="flex items-center space-x-4">
 					<img
 						src="/images/logo.png"
 						alt="Logo"
@@ -37,64 +48,31 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 					/>
 					<h1 className="text-xl font-semibold">Bookshelf App</h1>
 				</div>
-
-				{/* Desktop Navigation */}
-				<nav className="hidden md:flex space-x-6">
-					<Link
-						href="/about"
-						className="text-white hover:text-gray-300"
-					>
-						About
-					</Link>
-				</nav>
-
-				{/* Mobile Menu Toggle */}
-				<div className="md:hidden">
-					<button
-						onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-						className="text-white focus:outline-none"
-					>
-						{isMobileMenuOpen ? (
-							<XIcon className="h-6 w-6" />
-						) : (
-							<MenuIcon className="h-6 w-6" />
-						)}
-					</button>
-				</div>
+				{/* Menu Toggle for Mobile */}
+				<button
+					className="md:hidden text-white"
+					onClick={toggleSidebar}
+				>
+					{isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+				</button>
 			</header>
 
-			{isMobileMenuOpen && (
-				<aside className="md:hidden bg-gray-100 p-4 shadow-inner">
-					<h2 className="text-lg font-semibold mb-4">Shelves</h2>
-					<ul className="space-y-2">
-						{shelves.map((shelf) => (
-							<li key={shelf.id}>
-								<Link
-									href={`/shelves/${shelf.id}`}
-									className="block py-2 px-3 bg-indigo-100 text-indigo-900 hover:bg-indigo-200 rounded"
-									onClick={() => setIsMobileMenuOpen(false)} // Close menu on click
-								>
-									{shelf.title}
-								</Link>
-							</li>
-						))}
-					</ul>
-				</aside>
-			)}
-
 			<div className="flex flex-1">
-				{/* Side Navigation for Desktop */}
-				<aside className="hidden md:block w-64 bg-gray-100 p-4 shadow-inner">
+				{/* Side Navigation (hidden on mobile) */}
+				<aside
+					className={`${
+						isSidebarOpen ? "block" : "hidden"
+					} md:block w-64 bg-gray-100 p-4 shadow-inner absolute md:relative z-40 top-16 left-0 md:static md:h-auto h-screen`}
+				>
 					<h2 className="text-lg font-semibold mb-4">Shelves</h2>
 					<ul className="space-y-2">
 						{shelves.map((shelf) => (
 							<li key={shelf.id}>
-								<Link
-									href={`/shelves/${shelf.id}`}
-									className="block py-2 px-3 bg-indigo-100 text-indigo-900 hover:bg-indigo-200 rounded"
-								>
-									{shelf.title}
-								</Link>
+								<ShelfCard
+									id={shelf.id}
+									title={shelf.title}
+									onClick={handleShelfClick}
+								/>
 							</li>
 						))}
 					</ul>
@@ -105,36 +83,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 			</div>
 
 			{/* Footer */}
-			<footer className="bg-indigo-600 text-white p-4 flex justify-between items-center mt-auto">
+			<footer className="bg-indigo-600 text-white p-4 flex justify-between items-center mt-auto z-50">
 				<p className="text-sm">
 					&copy; {new Date().getFullYear()} Bookshelf App
 				</p>
-				<div className="flex space-x-4">
-					<a
-						href="https://twitter.com"
-						target="_blank"
-						rel="noopener noreferrer"
-						className="hover:text-gray-300"
-					>
-						Twitter
-					</a>
-					<a
-						href="https://facebook.com"
-						target="_blank"
-						rel="noopener noreferrer"
-						className="hover:text-gray-300"
-					>
-						Facebook
-					</a>
-					<a
-						href="https://instagram.com"
-						target="_blank"
-						rel="noopener noreferrer"
-						className="hover:text-gray-300"
-					>
-						Instagram
-					</a>
-				</div>
 			</footer>
 		</div>
 	);

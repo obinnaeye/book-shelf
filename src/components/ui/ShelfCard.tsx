@@ -1,20 +1,19 @@
-import Link from "next/link";
+import React from "react";
 
 interface ShelfCardProps {
 	id: string;
 	title: string;
-	description: string;
+	onClick: (shelfId: string) => void;
 }
 
-const ShelfCard: React.FC<ShelfCardProps> = ({ id, title, description }) => {
+const ShelfCard: React.FC<ShelfCardProps> = ({ id, title, onClick }) => {
 	return (
-		<div className="p-4 border rounded-lg">
-			<h2 className="text-lg font-semibold">{title}</h2>
-			<p>{description}</p>
-			<Link href={`/shelves/${id}`} className="text-blue-500">
-				View Shelf
-			</Link>
-		</div>
+		<button
+			onClick={() => onClick(id)}
+			className="block w-full py-2 px-3 bg-indigo-100 text-indigo-900 hover:bg-indigo-200 rounded mb-2"
+		>
+			{title}
+		</button>
 	);
 };
 
