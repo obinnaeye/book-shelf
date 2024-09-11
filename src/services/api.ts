@@ -55,7 +55,7 @@ export const fetchBookById = async (bookId: string) => {
 export const fetchBooksInShelf = async (
 	shelfId: string,
 	offset: number = 0,
-	limit: number = 21
+	limit: number = 20
 ) => {
 	try {
 		const bookIds: string[] = await fetchBookIds(shelfId, offset, limit);

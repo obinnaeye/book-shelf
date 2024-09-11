@@ -12,7 +12,7 @@ const Books: React.FC<BooksProps> = ({ shelfId }) => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [loading, setLoading] = useState(false);
 
-	const limit = 21;
+	const limit = 20;
 	const offset = (currentPage - 1) * limit;
 
 	useEffect(() => {
@@ -59,8 +59,7 @@ const Books: React.FC<BooksProps> = ({ shelfId }) => {
 										<Image
 											src={book.cover}
 											alt={book.title}
-											layout="fill"
-											objectFit="cover"
+											fill
 											className="rounded"
 										/>
 									</div>
