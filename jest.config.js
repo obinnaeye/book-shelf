@@ -8,6 +8,7 @@ const customJestConfig = {
 	transform: {
 		"^.+\\.tsx?$": "ts-jest",
 	},
+	testPathIgnorePatterns: ["<rootDir>/cypress/"],
 	moduleNameMapper: {
 		"\\.(css|less|sass|scss)$": "identity-obj-proxy",
 		"^.+\\.svg$": "jest-transformer-svg",
