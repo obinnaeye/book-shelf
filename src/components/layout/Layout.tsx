@@ -46,7 +46,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 						alt="Logo"
 						className="w-20 h-20"
 					/>
-					<h1 className="text-xl font-semibold">Bookshelf App</h1>
+					<h1
+						className="text-xl font-semibold"
+						data-testid="app-title"
+					>
+						Bookshelf App
+					</h1>
 				</div>
 				{/* Menu Toggle for Mobile */}
 				<button
@@ -65,7 +70,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 					} md:block w-64 bg-gray-100 p-4 shadow-inner absolute md:relative z-40 top-16 left-0 md:static md:h-auto h-screen`}
 				>
 					<h2 className="text-lg font-semibold mb-4">Shelves</h2>
-					<ul className="space-y-2">
+					<ul className="space-y-2" data-testid="shelves-list">
 						{shelves.map((shelf) => (
 							<li key={shelf.id}>
 								<ShelfCard

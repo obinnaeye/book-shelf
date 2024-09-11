@@ -48,7 +48,10 @@ const Books: React.FC<BooksProps> = ({ shelfId }) => {
 				<p>Loading books...</p>
 			) : (
 				<div>
-					<div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+					<div
+						className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+						data-testid="book-list"
+					>
 						{books.map((book) => (
 							<div
 								key={book.id}
@@ -92,6 +95,7 @@ const Books: React.FC<BooksProps> = ({ shelfId }) => {
 							}`}
 							onClick={handlePrevPage}
 							disabled={currentPage === 1}
+							data-testid="prev-btn"
 						>
 							Previous
 						</button>
@@ -99,6 +103,7 @@ const Books: React.FC<BooksProps> = ({ shelfId }) => {
 						<button
 							className="px-4 py-2 bg-indigo-600 text-white rounded"
 							onClick={handleNextPage}
+							data-testid="next-btn"
 						>
 							Next
 						</button>
