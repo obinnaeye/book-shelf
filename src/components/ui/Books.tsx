@@ -11,6 +11,7 @@ interface BooksProps {
 const Books: React.FC<BooksProps> = ({ shelfId }) => {
 	const [books, setBooks] = useState<BookDisplayModel[]>([]);
 	const [currentPage, setCurrentPage] = useState(1);
+	const [bookCount, setBookCount] = useState(0);
 	const [loading, setLoading] = useState(false);
 
 	const limit = 20;
@@ -42,6 +43,7 @@ const Books: React.FC<BooksProps> = ({ shelfId }) => {
 							mappedBooks.push(book);
 						}
 					}
+					setBookCount(mappedBooks.length);
 					setBooks(
 						mappedBooks.map(
 							mapBookToDisplayModel
@@ -56,7 +58,7 @@ const Books: React.FC<BooksProps> = ({ shelfId }) => {
 		};
 
 		fetchData();
-	}, [shelfId]);
+	}, [shelfId, currentPage]);
 
 	const handleNextPage = () => {
 		setCurrentPage((prev) => prev + 1);
@@ -129,9 +131,14 @@ const Books: React.FC<BooksProps> = ({ shelfId }) => {
 						</button>
 
 						<button
-							className="px-4 py-2 bg-indigo-600 text-white rounded"
+							className={`px-4 py-2 bg-indigo-600 text-white rounded ${
+								bookCount < 20
+									? "opacity-50 cursor-not-allowed"
+									: ""
+							}`}
 							onClick={handleNextPage}
 							data-testid="next-btn"
+							disabled={bookCount < 20}
 						>
 							Next
 						</button>
