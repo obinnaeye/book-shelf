@@ -32,7 +32,7 @@ export const fetchBookIds = async (
 		return data;
 	} catch (error) {
 		console.error("Error fetching book ids:", error);
-		return null;
+		return [];
 	}
 };
 
