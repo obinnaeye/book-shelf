@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { fetchBooksInShelf } from "@/services/api";
+import { fetchBookById, fetchBookIds } from "@/services/api";
 import Image from "next/image";
-import { BookDisplayModel } from "@/services/util";
+import { BookDisplayModel, mapBookToDisplayModel } from "@/services/util";
+import { from, mergeMap, Observable, scan } from "rxjs";
 
 interface BooksProps {
 	shelfId: string;
@@ -16,19 +17,46 @@ const Books: React.FC<BooksProps> = ({ shelfId }) => {
 	const offset = (currentPage - 1) * limit;
 
 	useEffect(() => {
-		const fetchShelfBooks = async () => {
-			setLoading(true);
-			const fetchedBooks = await fetchBooksInShelf(
-				shelfId,
-				offset,
-				limit
+		const fetchBooks$ = (
+			bookIds: string[]
+		): Observable<BookDisplayModel[]> => {
+			return from(bookIds).pipe(
+				mergeMap((id) => fetchBookById(id)),
+				scan<BookDisplayModel, BookDisplayModel[]>(
+					(acc, book) => [...acc, book],
+					[]
+				)
 			);
-			setBooks(fetchedBooks);
-			setLoading(false);
 		};
 
-		fetchShelfBooks();
-	}, [shelfId, currentPage]);
+		const fetchData = async () => {
+			setLoading(true);
+
+			const bookIds = await fetchBookIds(shelfId, offset, limit);
+
+			const subscription = fetchBooks$(bookIds).subscribe(
+				(fetchedBooks) => {
+					const mappedBooks = [];
+					for (const book of fetchedBooks) {
+						if (book.hasOwnProperty("id")) {
+							mappedBooks.push(book);
+						}
+					}
+					setBooks(
+						mappedBooks.map(
+							mapBookToDisplayModel
+						) as BookDisplayModel[]
+					);
+				}
+			);
+
+			setLoading(false);
+
+			return () => subscription.unsubscribe();
+		};
+
+		fetchData();
+	}, [shelfId]);
 
 	const handleNextPage = () => {
 		setCurrentPage((prev) => prev + 1);

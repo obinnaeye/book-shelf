@@ -1,5 +1,3 @@
-import { BookDisplayModel, mapBookToDisplayModel } from "./util";
-
 const API_BASE = process.env.NEXT_PUBLIC_BASE_ENDPOINT;
 
 export const fetchShelves = async () => {
@@ -49,26 +47,5 @@ export const fetchBookById = async (bookId: string) => {
 	} catch (error) {
 		console.error("Error fetching book:", error);
 		return null;
-	}
-};
-
-export const fetchBooksInShelf = async (
-	shelfId: string,
-	offset: number = 0,
-	limit: number = 20
-) => {
-	try {
-		const bookIds: string[] = await fetchBookIds(shelfId, offset, limit);
-		const books = [];
-		for (const bookId of bookIds) {
-			const book = await fetchBookById(bookId);
-			if (book.hasOwnProperty("id")) {
-				books.push(book);
-			}
-		}
-		return books.map(mapBookToDisplayModel) as BookDisplayModel[];
-	} catch (error) {
-		console.error("Error fetching books:", error);
-		return [];
 	}
 };
