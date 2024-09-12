@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { fetchShelves } from "@/services/api";
 import ShelfCard from "../ui/ShelfCard";
 import { Menu, X } from "lucide-react";
+import Link from "next/link";
 
 interface LayoutProps {
 	children: React.ReactNode;
@@ -17,6 +18,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 	const [shelves, setShelves] = useState<Shelf[]>([]);
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 	const router = useRouter();
+	const { id: shelfId } = router.query;
 
 	useEffect(() => {
 		const getShelves = async () => {
@@ -41,17 +43,21 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 			{/* Header */}
 			<header className="bg-indigo-600 text-white p-4 flex justify-between items-center shadow-md sticky top-0 z-50">
 				<div className="flex items-center space-x-4">
-					<img
-						src="/images/logo.png"
-						alt="Logo"
-						className="w-20 h-20"
-					/>
-					<h1
-						className="text-xl font-semibold"
-						data-testid="app-title"
-					>
-						Bookshelf App
-					</h1>
+					<Link href="/" passHref>
+						<div className="flex items-center space-x-2 cursor-pointer">
+							<img
+								src="/images/logo.png"
+								alt="Logo"
+								className="w-20 h-20"
+							/>
+							<span
+								className="text-2xl font-semibold"
+								data-testid="app-title"
+							>
+								Bookshelf App
+							</span>
+						</div>
+					</Link>
 				</div>
 				{/* Menu Toggle for Mobile */}
 				<button
@@ -77,6 +83,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 									id={shelf.id}
 									title={shelf.title}
 									onClick={handleShelfClick}
+									selected={shelf.id === shelfId}
 								/>
 							</li>
 						))}
